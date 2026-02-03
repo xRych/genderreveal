@@ -16,7 +16,6 @@
   --stroke:rgba(255,255,255,.18);
   --accent:#b6a7ff;
   --accent2:#9ee7ff;
-  --fit:1;
 }
 
 *{box-sizing:border-box}
@@ -67,29 +66,17 @@ body{
   }
 }
 
-/* FIT wrapper (transform aquí) */
-.wrap{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transform:scale(var(--fit));
-  transform-origin:center;
-  transition:transform .25s ease;
-  will-change:transform;
-}
-
-/* Container visible (lock) */
+/* lock container */
 .lock{
   position:relative;
   width:min(900px, 96vw);
-  height:min(560px, 76svh);
+  height:min(680px, 86svh); /* ✅ más alto general, sin depender de fit */
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-/* ===== OSO ===== */
+/* OSO */
 .seal-wrap{
   display:flex;
   flex-direction:column;
@@ -126,14 +113,13 @@ body{
 }
 .lock-hint b{ color:#fff; }
 
-/* ===== INVITE CARD ===== */
+/* INVITE */
 .invite{
   position:absolute;
   inset:0;
   width:min(900px, 96vw);
   margin:auto;
   border-radius:28px;
-  overflow:hidden;
   background: linear-gradient(180deg, var(--cardA), var(--cardB));
   border:1px solid var(--stroke);
   backdrop-filter: blur(14px);
@@ -143,14 +129,18 @@ body{
   transform: translateY(14px) scale(.98);
   pointer-events:none;
   transition: opacity .7s ease, transform .7s ease;
+
+  /* ✅ importante: por defecto NO scroll */
+  overflow:hidden;
 }
+
 .invite.show{
   opacity:1;
   transform: translateY(0) scale(1);
   pointer-events:auto;
 }
 
-/* decorations */
+/* decor */
 .invite .glow{
   position:absolute;
   inset:-60px -80px auto -80px;
@@ -172,19 +162,25 @@ body{
   mix-blend-mode: overlay;
 }
 
+/* ✅ CONTENIDO SCROLLEABLE SOLO EN MÓVIL */
+.content{
+  position:relative;
+  height:100%;
+  overflow:hidden; /* desktop */
+}
+
 /* layout */
 .grid{
-  position:relative;
   display:grid;
   grid-template-columns: 1.2fr .8fr;
-  /* ✅ importante: NO forzar alto grande en móvil */
-  min-height: 520px;
+  min-height:100%;
 }
 @media(max-width:860px){
-  .grid{ grid-template-columns:1fr; min-height:auto; }
+  .grid{ grid-template-columns:1fr; }
   .side{ border-left:0!important; border-top:1px solid rgba(255,255,255,.12); }
 }
 
+/* sections */
 .hero{ padding:22px 18px 14px; }
 .side{ padding:16px 14px; border-left:1px solid rgba(255,255,255,.12); }
 
@@ -242,7 +238,7 @@ h1{
 
 .bigline{
   margin-top:10px;
-  padding:10px 10px;
+  padding:10px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.14);
   background:
@@ -254,7 +250,7 @@ h1{
   font-size:12.2px;
 }
 
-/* right panel */
+/* panel */
 .panel{
   border:1px solid rgba(255,255,255,.14);
   background: rgba(0,0,0,.10);
@@ -308,21 +304,19 @@ h1{
 .invite.open .curtain .left{ transform: translateX(-102%); }
 .invite.open .curtain .right{ transform: translateX(102%); }
 
-/* hide tip on small screens */
-.closeHint{
-  position:absolute;
-  right:18px; bottom:12px;
-  font-size:12px;
-  color:rgba(246,247,255,.55);
-  user-select:none;
-}
-@media (max-width: 480px), (max-height: 720px){
-  .closeHint{ display:none; }
-}
-
-/* reduce motion */
-@media (prefers-reduced-motion: reduce){
-  *{animation:none!important;transition:none!important;}
+/* ✅ móvil: invite tiene alto fijo y scroll interno */
+@media (max-width: 500px), (max-height: 740px){
+  .lock{
+    height: 92svh; /* ocupa casi toda la pantalla */
+  }
+  .invite{
+    height: 92svh;        /* ✅ aquí “aumentas” alto a lo máximo posible */
+    max-height: 92svh;
+  }
+  .content{
+    overflow:auto;        /* ✅ scroll solo dentro */
+    -webkit-overflow-scrolling: touch;
+  }
 }
 </style>
 </head>
@@ -330,26 +324,26 @@ h1{
 <body>
   <div class="fx-layer" id="fxLayer"></div>
 
-  <div class="wrap" id="wrap">
-    <div class="lock" id="lock">
+  <div class="lock" id="lock">
+    <div class="seal-wrap" id="sealWrap">
+      <div class="seal" id="seal" aria-label="Abrir invitación">🧸</div>
+      <div class="lock-hint">
+        Toca el <b>osito</b> para ver la invitación ✨<br>
+        (se viene la sorpresa 🎀🧢)
+      </div>
+    </div>
 
-      <div class="seal-wrap" id="sealWrap">
-        <div class="seal" id="seal" aria-label="Abrir invitación">🧸</div>
-        <div class="lock-hint">
-          Toca el <b>osito</b> para ver la invitación ✨<br>
-          (se viene la sorpresa 🎀🧢)
-        </div>
+    <main class="invite" id="invite" aria-hidden="true">
+      <div class="glow"></div>
+      <div class="noise"></div>
+
+      <div class="curtain" aria-hidden="true">
+        <div class="left"></div>
+        <div class="right"></div>
       </div>
 
-      <main class="invite" id="invite" aria-hidden="true">
-        <div class="glow"></div>
-        <div class="noise"></div>
-
-        <div class="curtain" aria-hidden="true">
-          <div class="left"></div>
-          <div class="right"></div>
-        </div>
-
+      <!-- ✅ Todo el contenido dentro de un contenedor -->
+      <div class="content">
         <div class="grid">
           <section class="hero">
             <div class="topbar">
@@ -411,18 +405,13 @@ h1{
             </div>
           </aside>
         </div>
-
-        <div class="closeHint">Tip: recarga la página para volver a ocultar 😉</div>
-      </main>
-
-    </div>
+      </div>
+    </main>
   </div>
 
 <script>
-const wrap   = document.getElementById("wrap");
-const lock   = document.getElementById("lock");
-const fxLayer= document.getElementById("fxLayer");
-const seal   = document.getElementById("seal");
+const fxLayer = document.getElementById("fxLayer");
+const seal = document.getElementById("seal");
 const sealWrap = document.getElementById("sealWrap");
 const invite = document.getElementById("invite");
 
@@ -446,35 +435,6 @@ document.getElementById("dateSmall").textContent = EVENT.dateShort;
 document.getElementById("timeSmall").textContent = EVENT.time24;
 document.getElementById("placeSmall").textContent= EVENT.place;
 document.getElementById("noteSmall").textContent = EVENT.note;
-
-/* ✅ FIT correcto: medir tamaño real (sin escala) */
-function fit(){
-  // reset escala para medir sin transform
-  document.documentElement.style.setProperty("--fit", 1);
-
-  requestAnimationFrame(()=>{
-    const pad = 18;
-    const availW = innerWidth  - pad*2;
-    const availH = innerHeight - pad*2;
-
-    // OJO: offsetWidth/Height = tamaño real sin transform
-    const w = lock.offsetWidth;
-    const h = lock.offsetHeight;
-
-    let s = 1;
-    if(w > availW) s = Math.min(s, availW / w);
-    if(h > availH) s = Math.min(s, availH / h);
-
-    // mínimo dinámico (teléfonos pequeños)
-    const minScale = (innerWidth <= 480 || innerHeight <= 720) ? 0.58 : 0.78;
-    s = Math.max(minScale, s);
-
-    document.documentElement.style.setProperty("--fit", s.toFixed(3));
-  });
-}
-
-addEventListener("resize", fit);
-addEventListener("orientationchange", fit);
 
 /* Confetti */
 function burstAt(x, y, count=26){
@@ -522,7 +482,6 @@ seal.addEventListener("click", () => {
 
   requestAnimationFrame(() => {
     invite.classList.add("open");
-    fit();
   });
 
   setTimeout(() => burstAt(c.x, c.y, 18), 220);
@@ -530,7 +489,6 @@ seal.addEventListener("click", () => {
 
 /* init */
 invite.style.display = "none";
-requestAnimationFrame(fit);
 </script>
 </body>
 </html>
