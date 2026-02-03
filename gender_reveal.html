@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Invitación – Revelación de Género ✨</title>
+
+<style>
+:root{
+  --bgA:#070b18;
+  --bgB:#142055;
+
+  --text:#f6f7ff;
+  --muted:rgba(246,247,255,.75);
+
+  --cardA:rgba(255,255,255,.12);
+  --cardB:rgba(255,255,255,.06);
+  --stroke:rgba(255,255,255,.18);
+
+  --accent:#b6a7ff;
+  --accent2:#9ee7ff;
+
+  --fit:1;
+}
+
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+
+body{
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  padding:
+    calc(14px + env(safe-area-inset-top))
+    14px
+    calc(14px + env(safe-area-inset-bottom))
+    14px;
+  background:
+    radial-gradient(1200px 700px at 20% 20%, rgba(182,167,255,.25), transparent 60%),
+    radial-gradient(900px 600px at 80% 12%, rgba(158,231,255,.22), transparent 60%),
+    radial-gradient(1200px 900px at 50% 95%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(180deg,var(--bgA),var(--bgB));
+}
+
+/* FX */
+.fx-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+  overflow:hidden;
+}
+.fx{
+  position:fixed;
+  font-size:22px;
+  filter: drop-shadow(0 10px 16px rgba(0,0,0,.25));
+  animation: fly var(--dur) ease-out forwards;
+}
+@keyframes fly{
+  0%{ transform: translate(var(--x),var(--y)) scale(.85); opacity:0; }
+  12%{ opacity:1; }
+  100%{
+    transform:
+      translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy)))
+      rotate(var(--r))
+      scale(1.35);
+    opacity:0;
+  }
+}
+
+/* FIT wrapper */
+.wrap{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transform:scale(var(--fit));
+  transform-origin:center;
+  transition:transform .25s ease;
+  will-change:transform;
+}
+
+/* ==================== LOCK SCREEN (solo oso) ==================== */
+.lock{
+  position:relative;
+  width:min(900px, 96vw);
+  height:min(560px, 76svh);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.lock::before{
+  content:"";
+  position:absolute;
+  inset:-40px;
+  background:
+    radial-gradient(600px 240px at 50% 50%, rgba(182,167,255,.14), transparent 60%),
+    radial-gradient(700px 260px at 50% 55%, rgba(158,231,255,.12), transparent 65%);
+  filter: blur(10px);
+  opacity:.9;
+  pointer-events:none;
+}
+
+/* OSO + PISTA */
+.seal-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  z-index:6;
+  opacity:1;
+  transform: translateY(0) scale(1);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.seal-wrap.hide{
+  opacity:0;
+  transform: translateY(8px) scale(.92);
+  pointer-events:none;
+}
+
+.seal{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  cursor:pointer;
+  user-select:none;
+
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), rgba(255,255,255,.06)),
+    radial-gradient(circle at 70% 70%, rgba(182,167,255,.22), rgba(158,231,255,.10));
+  border:1px solid rgba(255,255,255,.20);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.45),
+    0 0 0 10px rgba(255,255,255,.04);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.seal:hover{ transform: scale(1.06); }
+.seal:active{ transform: scale(.98); }
+
+.lock-hint{
+  text-align:center;
+  color:rgba(246,247,255,.78);
+  font-size:13px;
+  line-height:1.35;
+  max-width: 320px;
+  padding: 0 8px;
+}
+.lock-hint b{ color:#fff; }
+
+/* ==================== INVITE CARD (oculta al inicio) ==================== */
+.invite{
+  position:absolute;
+  inset:0;
+  width:min(900px, 96vw);
+  margin:auto;
+  border-radius:30px;
+  overflow:hidden;
+
+  background: linear-gradient(180deg, var(--cardA), var(--cardB));
+  border:1px solid var(--stroke);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.35);
+
+  opacity:0;
+  transform: translateY(14px) scale(.98);
+  pointer-events:none;
+  transition: opacity .7s ease, transform .7s ease;
+}
+.invite.show{
+  opacity:1;
+  transform: translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+/* decor */
+.invite .glow{
+  position:absolute;
+  inset:-60px -80px auto -80px;
+  height:240px;
+  background:
+    radial-gradient(900px 280px at 50% 30%, rgba(182,167,255,.12), transparent 65%),
+    radial-gradient(700px 240px at 30% 40%, rgba(255,122,182,.14), transparent 60%),
+    radial-gradient(700px 240px at 70% 40%, rgba(121,198,255,.14), transparent 60%);
+  filter: blur(2px);
+  pointer-events:none;
+}
+.invite .noise{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity:.25;
+  mix-blend-mode: overlay;
+}
+
+/* grid */
+.grid{
+  position:relative;
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  min-height: 560px; /* desktop */
+}
+
+@media(max-width:860px){
+  .grid{
+    grid-template-columns: 1fr;
+    min-height: auto; /* ✅ clave: en móvil NO forzar altura */
+  }
+  .side{border-left:0!important;border-top:1px solid rgba(255,255,255,.12)}
+}
+
+.hero{ padding:26px 24px 18px; }
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.07);
+  font-weight:800;
+  letter-spacing:.2px;
+  font-size:13px;
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 0 16px rgba(182,167,255,.30);
+}
+.ribbon{
+  font-size:12px;
+  color:rgba(246,247,255,.72);
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.10);
+  padding:8px 10px;
+  border-radius:999px;
+}
+
+h1{
+  margin:16px 0 10px;
+  font-size: clamp(24px, 5.2vw, 46px);
+  line-height:1.05;
+  letter-spacing:-.6px;
+}
+
+.sub{
+  margin:0 0 12px;
+  color:var(--muted);
+  font-size: clamp(13.5px, 3.6vw, 16px);
+  line-height:1.48;
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:12px;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  font-size:13px;
+  color:rgba(246,247,255,.92);
+  white-space:nowrap;
+}
+.chip b{color:#fff}
+
+.bigline{
+  margin-top:14px;
+  padding:14px 14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    linear-gradient(135deg, rgba(255,122,182,.10), rgba(121,198,255,.10)),
+    rgba(255,255,255,.04);
+  color:rgba(246,247,255,.90);
+  font-weight:700;
+  line-height:1.35;
+}
+
+/* right */
+.side{ padding:20px 18px; border-left:1px solid rgba(255,255,255,.12); }
+.panel{
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.10);
+  border-radius:22px;
+  padding:14px 12px;
+}
+.panel h2{ margin:0 0 10px; font-size:15px; letter-spacing:.2px; }
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 10px;
+  border-radius:14px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  margin-bottom:10px;
+}
+.k{ color:rgba(246,247,255,.70); font-size:12px; }
+.v{ text-align:right; font-weight:900; font-size:13px; }
+
+.note{
+  margin-top:10px;
+  padding:12px 12px;
+  border-radius:16px;
+  border:1px dashed rgba(255,255,255,.22);
+  background: rgba(255,255,255,.05);
+  color:rgba(246,247,255,.82);
+  font-size:12.5px;
+  line-height:1.35;
+}
+.footer{ margin-top:10px; font-size:12px; color:rgba(246,247,255,.62); }
+
+/* curtain */
+.curtain{
+  position:absolute;
+  inset:0;
+  display:flex;
+  z-index:4;
+  pointer-events:none;
+}
+.curtain .left,
+.curtain .right{
+  flex:1;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.25)),
+    radial-gradient(700px 240px at 50% 30%, rgba(182,167,255,.18), transparent 60%),
+    rgba(8,12,26,.86);
+  transition: transform .9s cubic-bezier(.2,.9,.2,1);
+  border-right:1px solid rgba(255,255,255,.08);
+}
+.curtain .right{
+  border-right:0;
+  border-left:1px solid rgba(255,255,255,.08);
+}
+.invite.open .curtain .left{ transform: translateX(-102%); }
+.invite.open .curtain .right{ transform: translateX(102%); }
+
+.closeHint{
+  position:absolute;
+  right:18px;
+  bottom:14px;
+  font-size:12px;
+  color:rgba(246,247,255,.55);
+  user-select:none;
+}
+
+/* ==================== EXTRA RESPONSIVE (teléfonos pequeños) ==================== */
+@media (max-width: 420px){
+  body{ padding: 10px; }
+  .invite{ border-radius:20px; }
+  .hero{ padding:16px 14px 12px; }
+  .side{ padding:14px 12px; }
+
+  .badge{ padding:8px 10px; font-size:12px; gap:8px; }
+  .ribbon{ padding:7px 9px; font-size:11px; }
+
+  h1{ margin:12px 0 8px; font-size: clamp(22px, 7.4vw, 32px); }
+  .sub{ font-size:12.8px; margin-bottom:10px; }
+
+  .chips{ gap:8px; }
+  /* ✅ chips se vuelven 2 columnas si cabe */
+  .chip{
+    padding:8px 10px;
+    font-size:12.2px;
+    white-space:normal;
+    border-radius:16px;
+  }
+
+  .bigline{
+    padding:10px 10px;
+    border-radius:14px;
+    font-size:12.2px;
+    margin-top:10px;
+  }
+
+  .panel{ border-radius:18px; padding:12px 10px; }
+  .panel h2{ font-size:13.5px; }
+
+  .item{ padding:9px; border-radius:12px; margin-bottom:8px; }
+  .v{ font-size:12.2px; }
+  .note{ font-size:12px; border-radius:12px; padding:10px; }
+
+  /* ✅ en móviles pequeños el tip estorba, se oculta */
+  .closeHint{ display:none; }
+
+  /* lock */
+  .seal{ width:90px; height:90px; font-size:38px; }
+  .lock-hint{ font-size:12.2px; max-width: 270px; }
+}
+
+/* pantallas con poca altura */
+@media (max-height: 700px){
+  .hero{ padding:14px 14px 10px; }
+  .side{ padding:12px 12px; }
+  .bigline{ margin-top:10px; }
+  .closeHint{ display:none; } /* ✅ también fuera si hay poca altura */
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+
+<body>
+  <div class="fx-layer" id="fxLayer"></div>
+
+  <div class="wrap" id="wrap">
+    <div class="lock" id="lock">
+
+      <div class="seal-wrap" id="sealWrap">
+        <div class="seal" id="seal" aria-label="Abrir invitación">🧸</div>
+        <div class="lock-hint">
+          Toca el <b>osito</b> para ver la invitación ✨<br>
+          (se viene la sorpresa 🎀🧢)
+        </div>
+      </div>
+
+      <main class="invite" id="invite" aria-hidden="true">
+        <div class="glow"></div>
+        <div class="noise"></div>
+
+        <div class="curtain" aria-hidden="true">
+          <div class="left"></div>
+          <div class="right"></div>
+        </div>
+
+        <div class="grid">
+          <section class="hero">
+            <div class="topbar">
+              <div class="badge"><span class="dot"></span> Invitación especial</div>
+              <div class="ribbon">Dress code: Neutros 🤍</div>
+            </div>
+
+            <h1>¡Revelación de Género!<br>Descubramos juntos ✨</h1>
+
+            <p class="sub">
+              Queremos compartir contigo un momento súper especial.
+              Habrá risas, comida rica y una sorpresa que no te puedes perder 🎊
+            </p>
+
+            <div class="chips">
+              <div class="chip">📅 <b id="dateText">Sábado, 15 de marzo</b></div>
+              <div class="chip">⏰ <b id="timeText">5:00 PM</b></div>
+              <div class="chip">📍 <b id="placeText">Mi casa</b></div>
+              <div class="chip">🎁 <b id="giftText">Opcional</b></div>
+            </div>
+
+            <div class="bigline">
+              Pista: trae tu mejor energía…<br>
+              la revelación viene con confetti y mucha emoción 🧸🎊
+            </div>
+          </section>
+
+          <aside class="side">
+            <div class="panel">
+              <h2>Detalles del evento</h2>
+
+              <div class="item">
+                <div>
+                  <div class="k">Fecha</div>
+                  <div class="v" id="dateSmall">Sáb 15 Mar</div>
+                </div>
+                <div>
+                  <div class="k">Hora</div>
+                  <div class="v" id="timeSmall">17:00</div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div>
+                  <div class="k">Lugar</div>
+                  <div class="v" id="placeSmall">Mi casa</div>
+                </div>
+                <div>
+                  <div class="k">Color recomendado</div>
+                  <div class="v">Neutros</div>
+                </div>
+              </div>
+
+              <div class="note" id="noteSmall">
+                Llega 15 min antes para no perderte la sorpresa ✨
+              </div>
+
+              <div class="footer">Hecho con cariño 💜</div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="closeHint">Tip: recarga la página para volver a ocultar 😉</div>
+      </main>
+
+    </div>
+  </div>
+
+<script>
+const wrap = document.getElementById("wrap");
+const lock = document.getElementById("lock");
+const fxLayer = document.getElementById("fxLayer");
+
+const seal = document.getElementById("seal");
+const sealWrap = document.getElementById("sealWrap");
+const invite = document.getElementById("invite");
+
+/* EDITA AQUÍ (DATOS) */
+const EVENT = {
+  dateLong: "Sábado, 15 de marzo",
+  dateShort: "Sáb 15 Mar",
+  timeDisplay: "5:00 PM",
+  time24: "17:00",
+  place: "Mi casa",
+  gift: "Opcional",
+  note: "Llega 15 min antes para no perderte la sorpresa ✨"
+};
+
+document.getElementById("dateText").textContent  = EVENT.dateLong;
+document.getElementById("timeText").textContent  = EVENT.timeDisplay;
+document.getElementById("placeText").textContent = EVENT.place;
+document.getElementById("giftText").textContent  = EVENT.gift;
+
+document.getElementById("dateSmall").textContent = EVENT.dateShort;
+document.getElementById("timeSmall").textContent = EVENT.time24;
+document.getElementById("placeSmall").textContent= EVENT.place;
+document.getElementById("noteSmall").textContent = EVENT.note;
+
+/* AUTO FIT (NO SCROLL)
+   ✅ En teléfonos pequeños permitimos bajar más la escala */
+function fit(){
+  document.documentElement.style.setProperty("--fit", 1);
+  requestAnimationFrame(()=>{
+    const pad = 18;
+    const availW = innerWidth - pad*2;
+    const availH = innerHeight - pad*2;
+
+    const rect = lock.getBoundingClientRect();
+    let s = 1;
+    if(rect.width  > availW) s = Math.min(s, availW / rect.width);
+    if(rect.height > availH) s = Math.min(s, availH / rect.height);
+
+    // ✅ mínimo dinámico: en pantallas pequeñas deja bajar más
+    const minScale = (innerWidth <= 420 || innerHeight <= 700) ? 0.64 : 0.78;
+    s = Math.max(minScale, s);
+
+    document.documentElement.style.setProperty("--fit", s.toFixed(3));
+  });
+}
+addEventListener("resize", fit);
+addEventListener("orientationchange", fit);
+
+/* CONFETTI (ambos géneros) */
+function burstAt(x, y, count=26){
+  const mix = ["🎀","🧢","👶","💗","💙","✨","🎊","🌟","💫"];
+  for(let i=0;i<count;i++){
+    const s = document.createElement("span");
+    s.className="fx";
+    s.textContent = mix[Math.floor(Math.random()*mix.length)];
+
+    const dx = (Math.random()*2 - 1) * 220;
+    const dy = -(90 + Math.random()*220);
+    const rot = (Math.random()*2 - 1) * 55;
+    const dur = 750 + Math.random()*850;
+
+    s.style.setProperty("--x", x + "px");
+    s.style.setProperty("--y", y + "px");
+    s.style.setProperty("--dx", dx + "px");
+    s.style.setProperty("--dy", dy + "px");
+    s.style.setProperty("--r", rot + "deg");
+    s.style.setProperty("--dur", dur.toFixed(0) + "ms");
+
+    fxLayer.appendChild(s);
+    setTimeout(()=>s.remove(), dur + 80);
+  }
+}
+function centerOf(el){
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
+}
+
+/* OPEN FLOW */
+let opened = false;
+seal.addEventListener("click", () => {
+  const c = centerOf(seal);
+  burstAt(c.x, c.y, 30);
+
+  if(opened) return;
+  opened = true;
+
+  sealWrap.classList.add("hide");
+
+  invite.style.display = "block";
+  invite.classList.add("show");
+  invite.setAttribute("aria-hidden", "false");
+
+  requestAnimationFrame(() => {
+    invite.classList.add("open");
+    fit();
+  });
+
+  setTimeout(() => burstAt(c.x, c.y, 18), 220);
+});
+
+/* init */
+invite.style.display = "none";
+requestAnimationFrame(() => fit());
+</script>
+</body>
+</html>
