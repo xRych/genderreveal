@@ -1,510 +1,412 @@
 <!doctype html>
 <html lang="es">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Invitación — Revelación de Género</title>
 
   <style>
-    :root {
-      --bg: #f7f2ea;
-      --paper: #ffffffee;
-      --ink: #3b2f2a;
-      --muted: #6b5b54;
-      --line: #e6ddd3;
-      --shadow: 0 18px 50px rgba(46, 31, 23, .12);
-      --accent: #b58c6a;
-      --accent2: #d9bca2;
-      --btn: #b58c6a;
-      --btnText: #fff;
-      --radius: 26px;
+    :root{
+      --bg:#f7f2ea;
+      --paper:#ffffffee;
+      --ink:#3b2f2a;
+      --muted:#6b5b54;
+      --line:#e6ddd3;
+      --shadow:0 18px 50px rgba(46,31,23,.12);
+      --accent:#b58c6a;
+      --accent2:#d9bca2;
+      --btnText:#fff;
+      --radius:26px;
 
-      --glass: rgba(255, 255, 255, .70);
-      --glass2: rgba(255, 255, 255, .82);
-      --ring: rgba(181, 140, 106, .18);
+      --glass: rgba(255,255,255,.70);
+      --ring: rgba(181,140,106,.18);
     }
 
-    * {
-      box-sizing: border-box
-    }
-
-    html {
-      scroll-behavior: smooth
-    }
-
-    body {
-      margin: 0;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
       font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      color: var(--ink);
+      color:var(--ink);
       background:
-        radial-gradient(1200px 520px at 50% 0%, rgba(181, 140, 106, .18), transparent 60%),
-        radial-gradient(900px 450px at 85% 15%, rgba(217, 188, 162, .22), transparent 65%),
-        radial-gradient(900px 450px at 15% 20%, rgba(217, 188, 162, .14), transparent 65%),
+        radial-gradient(1200px 520px at 50% 0%, rgba(181,140,106,.18), transparent 60%),
+        radial-gradient(900px 450px at 85% 15%, rgba(217,188,162,.22), transparent 65%),
+        radial-gradient(900px 450px at 15% 20%, rgba(217,188,162,.14), transparent 65%),
         var(--bg);
-      overflow-x: hidden;
+      overflow-x:hidden;
     }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -40px;
-      pointer-events: none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-40px;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 20% 25%, rgba(255, 255, 255, .35), transparent 40%),
-        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, .25), transparent 45%),
-        radial-gradient(circle at 70% 85%, rgba(255, 255, 255, .22), transparent 48%),
-        radial-gradient(circle at 10% 80%, rgba(255, 255, 255, .18), transparent 52%);
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,.35), transparent 40%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,.25), transparent 45%),
+        radial-gradient(circle at 70% 85%, rgba(255,255,255,.22), transparent 48%),
+        radial-gradient(circle at 10% 80%, rgba(255,255,255,.18), transparent 52%);
       filter: blur(8px);
-      opacity: .9;
-      z-index: -2;
+      opacity:.9;
+      z-index:-2;
     }
 
-    .container {
-      width: min(980px, 92vw);
-      margin: 22px auto 80px;
-      position: relative;
+    .container{
+      width:min(980px, 92vw);
+      margin: 18px auto 80px;
+      position:relative;
     }
 
-    .card {
+    /* ===== Cards layout ===== */
+    .cards{
+      display:flex;
+      flex-direction:column;
+      gap:16px;                 /* separación visual por bloques */
+    }
+
+    .card{
       background: var(--paper);
-      border: 1px solid var(--line);
+      border:1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-      overflow: hidden;
+      overflow:hidden;
+      position:relative;
 
       transform: translateY(10px) scale(.985);
       opacity: .01;
       filter: blur(10px);
-      transition: transform .75s cubic-bezier(.2, .9, .2, 1),
-        opacity .75s ease,
-        filter .75s ease;
+      transition: transform .75s cubic-bezier(.2,.9,.2,1),
+                  opacity .75s ease,
+                  filter .75s ease;
     }
-
-    .card.reveal {
+    .card.reveal{
       transform: translateY(0) scale(1);
       opacity: 1;
       filter: blur(0);
     }
 
-    /* ✅ Solo para "Adam y Nembihu" (más grande) */
-    .script-names {
-      font-family: "Lucida Handwriting";
-      font-style: italic;
-      font-weight: 700;
-      letter-spacing: -.15px;
-      font-size: 5px;
-      line-height: 1.05;
-      text-shadow: 0 10px 24px rgba(46, 31, 23, .10);
-    }
-
-    .hero-band {
-      position: relative;
-      padding: 26px 22px 18px;
+    /* ===== Fondo decorativo (premium) por card ===== */
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.22;
+      z-index:0;
       background:
-        radial-gradient(600px 220px at 20% 10%, rgba(181, 140, 106, .20), transparent 60%),
-        radial-gradient(620px 260px at 80% 0%, rgba(217, 188, 162, .22), transparent 62%),
-        linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .55));
-      border-bottom: 1px solid var(--line);
+        radial-gradient(220px 220px at 14% 22%, rgba(181,140,106,.30), transparent 65%),
+        radial-gradient(260px 260px at 86% 18%, rgba(217,188,162,.34), transparent 70%),
+        radial-gradient(320px 320px at 50% 120%, rgba(181,140,106,.22), transparent 70%);
+      filter: blur(2px);
     }
-
-    .hero-band::after {
-      content: "";
-      position: absolute;
-      left: -20%;
-      right: -20%;
-      bottom: -1px;
-      height: 70px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .85));
-      transform: translateY(20px);
-      filter: blur(14px);
-      pointer-events: none;
+    .card[data-bg="a"]::after{
+      opacity:.24;
+      background:
+        radial-gradient(230px 230px at 16% 24%, rgba(181,140,106,.30), transparent 65%),
+        radial-gradient(260px 260px at 84% 16%, rgba(217,188,162,.34), transparent 70%),
+        radial-gradient(360px 360px at 52% 115%, rgba(181,140,106,.22), transparent 70%);
     }
-
-    .section {
-      padding: 26px 22px;
-      border-top: 1px solid var(--line);
-      position: relative;
+    .card[data-bg="b"]::after{
+      opacity:.22;
+      background:
+        radial-gradient(260px 260px at 10% 10%, rgba(217,188,162,.34), transparent 70%),
+        radial-gradient(240px 240px at 92% 30%, rgba(181,140,106,.28), transparent 68%),
+        radial-gradient(420px 260px at 50% 120%, rgba(217,188,162,.20), transparent 70%);
     }
-
-    .section:first-child {
-      border-top: 0;
+    .card[data-bg="c"]::after{
+      opacity:.20;
+      background:
+        radial-gradient(220px 220px at 18% 30%, rgba(181,140,106,.26), transparent 65%),
+        radial-gradient(320px 260px at 78% 22%, rgba(217,188,162,.28), transparent 70%),
+        radial-gradient(520px 260px at 50% 110%, rgba(181,140,106,.18), transparent 72%);
     }
+    .card[data-bg="d"]::after{
+      opacity:.23;
+      background:
+        radial-gradient(260px 260px at 20% 14%, rgba(217,188,162,.33), transparent 70%),
+        radial-gradient(260px 260px at 80% 18%, rgba(181,140,106,.28), transparent 70%),
+        radial-gradient(520px 320px at 50% 118%, rgba(217,188,162,.18), transparent 72%);
+    }
+    .card > *{ position:relative; z-index:1; }
 
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+    /* ===== Typography / headers ===== */
+    .section-pad{ padding: 22px 20px; }
+    .section-head{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
       margin-bottom: 12px;
-      flex-wrap: nowrap;
+      flex-wrap:nowrap;
     }
-
-    .badge-ico {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .70);
-      box-shadow: 0 14px 28px rgba(46, 31, 23, .07);
+    .badge-ico{
+      width:34px;height:34px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.70);
+      box-shadow: 0 14px 28px rgba(46,31,23,.07);
       font-size: 18px;
-      user-select: none;
-      flex: 0 0 auto;
+      user-select:none;
+      flex:0 0 auto;
     }
-
-    /* ✅ Títulos en una sola línea + se ajustan en móvil */
-    .section-title {
-      margin: 0;
+    .section-title{
+      margin:0;
       font-size: clamp(18px, 4.8vw, 30px);
       color: var(--accent);
       letter-spacing: -.3px;
       white-space: nowrap;
       line-height: 1.1;
-      text-align: center;
+      text-align:center;
     }
-
-    .pill-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .70);
-      color: var(--muted);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight: 800;
-      font-size: 13px;
-      box-shadow: 0 14px 28px rgba(46, 31, 23, .06);
-    }
-
-    .subtitle {
-      text-align: center;
+    .subtitle{
+      text-align:center;
       margin: 0 auto;
       max-width: 680px;
       color: var(--muted);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height: 1.55;
+      line-height:1.55;
       font-size: 14.5px;
     }
-
-    .divider {
-      height: 1px;
+    .divider{
+      height:1px;
       background: linear-gradient(90deg, transparent, var(--line), transparent);
       margin: 18px auto;
-      width: min(560px, 92%);
+      width:min(560px, 92%);
     }
 
-    .btn {
-      border: 0;
-      cursor: pointer;
+    /* ===== Buttons ===== */
+    .btn{
+      border:0;
+      cursor:pointer;
       border-radius: 14px;
       padding: 12px 16px;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-weight: 900;
       letter-spacing: .2px;
       transition: transform .12s ease, filter .2s ease, opacity .2s ease;
-      user-select: none;
+      user-select:none;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .btn:hover {
-      filter: brightness(1.02);
-    }
-
-    .btn:active {
-      transform: scale(.98);
-    }
-
-    .btn.primary {
-      background: linear-gradient(180deg, rgba(181, 140, 106, 1), rgba(162, 122, 92, 1));
+    .btn:hover{ filter: brightness(1.03); }
+    .btn:active{ transform: scale(.98); }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(181,140,106,1), rgba(162,122,92,1));
       color: var(--btnText);
-      box-shadow: 0 14px 32px rgba(181, 140, 106, .28);
+      box-shadow: 0 14px 32px rgba(181,140,106,.28);
     }
-
-    .btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .btn.icon {
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+    .btn.icon{
       width: 52px;
       height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       padding: 0;
       border-radius: 16px;
+      text-decoration:none;
     }
 
-    /* Botón flecha de apertura */
-    .arrow-btn {
-      margin-top: 10px;
-      width: 64px;
-      height: 64px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      background: linear-gradient(180deg,
-          rgba(181, 140, 106, 1),
-          rgba(162, 122, 92, 1));
-      color: #fff;
-
-      box-shadow: 0 18px 40px rgba(181, 140, 106, .35);
-      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
-    }
-
-    /* Botón WhatsApp con imagen */
-    .whatsapp-btn-img{
-      width: 52px;
-      height: 52px;
-      border-radius: 999px;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .whatsapp-btn-img img{
-      width: 40px;
-      height: 40px;
-      display: block;
-    }
-
-    .whatsapp-btn-img:active{
-      transform: scale(.95);
-    }
-
-    .arrow-btn:hover {
-      filter: brightness(1.05);
-      box-shadow: 0 22px 48px rgba(181, 140, 106, .45);
-    }
-
-    .arrow-btn:active {
-      transform: scale(.94);
-    }
-
-    .cover {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* ===== Cover ===== */
+    .cover{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding: 20px;
-      z-index: 9999;
+      z-index:9999;
       background:
-        radial-gradient(1200px 520px at 50% 0%, rgba(181, 140, 106, .20), transparent 60%),
-        radial-gradient(900px 450px at 85% 15%, rgba(217, 188, 162, .22), transparent 65%),
-        radial-gradient(900px 450px at 15% 20%, rgba(217, 188, 162, .14), transparent 65%),
+        radial-gradient(1200px 520px at 50% 0%, rgba(181,140,106,.20), transparent 60%),
+        radial-gradient(900px 450px at 85% 15%, rgba(217,188,162,.22), transparent 65%),
+        radial-gradient(900px 450px at 15% 20%, rgba(217,188,162,.14), transparent 65%),
         var(--bg);
-      transition: opacity .75s ease, transform .75s cubic-bezier(.2, .9, .2, 1), filter .75s ease;
+      transition: opacity .75s ease, transform .75s cubic-bezier(.2,.9,.2,1), filter .75s ease;
     }
-
-    .cover.hide {
-      opacity: 0;
-      pointer-events: none;
+    .cover.hide{
+      opacity:0;
+      pointer-events:none;
       transform: scale(1.03);
       filter: blur(10px);
     }
-
-    .cover-card {
-      width: min(560px, 94vw);
-      background: rgba(255, 255, 255, .80);
-      border: 1px solid var(--line);
+    .cover-card{
+      width:min(560px, 94vw);
+      background: rgba(255,255,255,.82);
+      border:1px solid var(--line);
       border-radius: 24px;
-      box-shadow: 0 22px 70px rgba(46, 31, 23, .18);
-      overflow: hidden;
+      box-shadow: 0 22px 70px rgba(46,31,23,.18);
+      overflow:hidden;
       padding: 26px 18px 22px;
-      text-align: center;
-      position: relative;
+      text-align:center;
+      position:relative;
     }
-
-    .cover-card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
+    .cover-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
       border-radius: 24px;
-      background: radial-gradient(420px 160px at 10% 0%, rgba(181, 140, 106, .18), transparent 60%),
-        radial-gradient(420px 160px at 90% 0%, rgba(217, 188, 162, .20), transparent 60%);
-      pointer-events: none;
+      background:
+        radial-gradient(420px 160px at 10% 0%, rgba(181,140,106,.18), transparent 60%),
+        radial-gradient(420px 160px at 90% 0%, rgba(217,188,162,.20), transparent 60%);
+      pointer-events:none;
     }
-
-    .cover-title {
-      position: relative;
-      margin: 0;
+    .cover-title{
+      position:relative;
+      margin:0;
       font-size: clamp(26px, 6vw, 44px);
-      line-height: 1.05;
-      letter-spacing: -.6px;
+      line-height:1.05;
+      letter-spacing:-.6px;
     }
-
-    .cover-sub {
-      position: relative;
+    .cover-sub{
+      position:relative;
       margin: 10px auto 0;
       color: var(--muted);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 14px;
       font-weight: 700;
     }
-
-    .icons {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
+    .icons{
+      display:flex;
+      justify-content:center;
+      gap:14px;
       font-size: 52px;
       margin: 14px 0 12px;
-      user-select: none;
+      user-select:none;
       animation: floaty 2.8s ease-in-out infinite;
-      position: relative;
+      position:relative;
     }
-
-    @keyframes floaty {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-6px);
-      }
-    }
-
-    .cover-msg {
-      position: relative;
+    @keyframes floaty{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .cover-msg{
+      position:relative;
       margin: 0 auto 14px;
       max-width: 420px;
       color: var(--muted);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height: 1.5;
+      line-height:1.5;
       font-size: 14px;
     }
 
-    .center {
-      text-align: center;
+    .arrow-btn{
+      margin-top: 10px;
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(181,140,106,1), rgba(162,122,92,1));
+      color: #fff;
+      box-shadow: 0 18px 40px rgba(181,140,106,.35);
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
     }
+    .arrow-btn:hover{ filter: brightness(1.05); box-shadow: 0 22px 48px rgba(181,140,106,.45); }
+    .arrow-btn:active{ transform: scale(.94); }
 
-    .big-name {
+    /* ===== Hero ===== */
+    .hero-band{
+      padding: 22px 20px 18px;
+      background:
+        radial-gradient(600px 220px at 20% 10%, rgba(181,140,106,.20), transparent 60%),
+        radial-gradient(620px 260px at 80% 0%, rgba(217,188,162,.22), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.56));
+      border-bottom:1px solid rgba(230,221,211,.75);
+    }
+    .center{text-align:center}
+    .big-name{
       font-size: clamp(30px, 6vw, 56px);
       margin: 4px 0 6px;
       letter-spacing: -0.6px;
     }
-
-    .names {
+    .names{
       color: var(--accent);
       font-size: clamp(22px, 4.8vw, 34px);
       margin: 10px 0 6px;
     }
-
-    /* ✅ Wrapper para que He or She + flourish SIEMPRE queden debajo y centrados */
-    .heorshe-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
+    .script-names{
+      font-family: "Lucida Handwriting";
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: -.15px;
+      font-size: 25px;
+      line-height: 1.05;
+      text-shadow: 0 10px 24px rgba(46,31,23,.10);
     }
 
-    .heorshe {
+    .heorshe-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-top:10px;
+    }
+    .heorshe{
       font-size: clamp(20px, 4.2vw, 34px);
       color: var(--accent);
-      margin-top: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .70);
-      box-shadow: 0 14px 28px rgba(46, 31, 23, .06);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.70);
+      box-shadow: 0 14px 28px rgba(46,31,23,.06);
+    }
+    .flourish{
+      width:min(220px, 60%);
+      margin: 0 auto;
+      opacity:.9;
+      display:block;
     }
 
-    .photo-row {
-      display: grid;
+    .photo-row{
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 16px auto 0;
-      width: min(820px, 100%);
+      gap:12px;
+      padding: 16px 20px 20px;
     }
+    @media (max-width: 720px){ .photo-row{ grid-template-columns: 1fr; } }
 
-    @media (max-width: 720px) {
-      .photo-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .photo-card {
-      border: 1px solid var(--line);
+    .photo-card{
+      border:1px solid var(--line);
       border-radius: 22px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, .72);
-      box-shadow: 0 18px 40px rgba(46, 31, 23, .08);
-      position: relative;
+      overflow:hidden;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 18px 40px rgba(46,31,23,.08);
+      position:relative;
       min-height: 190px;
     }
-
-    .photo-card .caption {
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
+    .photo-card .caption{
+      position:absolute;
+      left:12px; right:12px; bottom:12px;
       padding: 10px 12px;
       border-radius: 16px;
-      background: rgba(255, 255, 255, .78);
-      border: 1px solid rgba(230, 221, 211, .9);
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(230,221,211,.9);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-weight: 800;
       color: var(--muted);
-      box-shadow: 0 14px 28px rgba(46, 31, 23, .06);
+      box-shadow: 0 14px 28px rgba(46,31,23,.06);
       backdrop-filter: blur(10px);
       font-size: 13px;
     }
+    .photo-card .art{ width:100%; height:100%; display:block; }
 
-    .photo-card .art {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+    /* ===== Blocks ===== */
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    @media (max-width: 720px){ .grid2{ grid-template-columns: 1fr; } }
 
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    @media (max-width: 720px) {
-      .grid2 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .box {
-      border: 1px solid var(--line);
+    .box{
+      border:1px solid var(--line);
       border-radius: 18px;
       background: var(--glass);
       padding: 14px 14px;
-      box-shadow: 0 14px 30px rgba(46, 31, 23, .06);
+      box-shadow: 0 14px 30px rgba(46,31,23,.06);
     }
-
-    .label {
+    .label{
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--muted);
       font-size: 12px;
@@ -512,67 +414,45 @@
       letter-spacing: .25px;
       text-transform: uppercase;
       margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
-
-    .value {
+    .value{
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 15px;
       font-weight: 900;
       color: var(--ink);
       line-height: 1.25;
     }
-
-    .value.small {
+    .value.small{
       font-size: 14px;
       font-weight: 700;
       color: var(--muted);
     }
 
-    .action-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 12px;
-    }
-
-    .countdown-wrap {
+    .countdown-wrap{
       width: 100%;
       margin: 12px auto 0;
-      text-align: center;
+      text-align:center;
       padding: 12px 10px 10px;
       border-radius: 18px;
-      background: rgba(255, 255, 255, .55);
-      border: 1px solid rgba(230, 221, 211, .85);
-      box-shadow: 0 18px 42px rgba(46, 31, 23, .06);
-      position: relative;
-      overflow: hidden;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(230,221,211,.85);
+      box-shadow: 0 18px 42px rgba(46,31,23,.06);
+      position:relative;
+      overflow:hidden;
     }
-
-    .countdown-wrap::before {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      background: radial-gradient(520px 160px at 50% 0%, rgba(181, 140, 106, .18), transparent 60%);
-      pointer-events: none;
-      opacity: .9;
+    .countdown-wrap::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(520px 160px at 50% 0%, rgba(181,140,106,.18), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
     }
-
-    .countdown-big {
-      position: relative;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-weight: 950;
-      letter-spacing: 1px;
-      color: var(--ink);
-      font-size: clamp(22px, 6vw, 40px);
-      text-shadow: 0 12px 26px rgba(46, 31, 23, .10);
-      line-height: 1.1;
-    }
-
-    .countdown-title {
+    .countdown-title{
+      position:relative;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-weight: 900;
       font-size: 13px;
@@ -581,285 +461,239 @@
       color: var(--accent);
       margin-bottom: 6px;
     }
-
-    .countdown-sub {
-      position: relative;
+    .countdown-big{
+      position:relative;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-weight: 950;
+      letter-spacing: 1px;
+      color: var(--ink);
+      font-size: clamp(22px, 6vw, 40px);
+      text-shadow: 0 12px 26px rgba(46,31,23,.10);
+      line-height: 1.1;
+    }
+    .countdown-sub{
+      position:relative;
       margin-top: 8px;
-      color: rgba(107, 91, 84, .78);
+      color: rgba(107,91,84,.78);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: .2px;
+      letter-spacing:.2px;
     }
 
-    /* ✅ Voto SIEMPRE horizontal (incluso en móvil) */
-    .vote-wrap {
-      display: grid;
+    .location-btn-wrap{ display:flex; justify-content:center; margin-top: 12px; }
+
+    /* Voting always 2 columns */
+    .vote-wrap{
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap:12px;
       margin-top: 14px;
     }
-
-    .vote-card {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .76);
+    .vote-card{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.76);
       border-radius: 22px;
       padding: 16px;
-      text-align: center;
-      box-shadow: 0 18px 42px rgba(46, 31, 23, .06);
-      position: relative;
-      overflow: hidden;
+      text-align:center;
+      box-shadow: 0 18px 42px rgba(46,31,23,.06);
+      position:relative;
+      overflow:hidden;
     }
-
-    .vote-card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      background: radial-gradient(420px 160px at 50% 0%, rgba(181, 140, 106, .10), transparent 62%);
-      pointer-events: none;
+    .vote-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: radial-gradient(420px 160px at 50% 0%, rgba(181,140,106,.10), transparent 62%);
+      pointer-events:none;
     }
-
-    .vote-emoji {
-      position: relative;
-      font-size: 44px;
-      line-height: 1;
-      margin-top: 2px;
-    }
-
-    .vote-title {
-      position: relative;
+    .vote-emoji{ position:relative; font-size: 44px; line-height:1; margin-top:2px; }
+    .vote-title{
+      position:relative;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-weight: 950;
       margin: 10px 0 10px;
       font-size: 16px;
     }
 
-    @media (max-width: 420px) {
-      .vote-card {
-        padding: 12px;
-        border-radius: 18px;
-      }
-
-      .vote-emoji {
-        font-size: 38px;
-      }
-
-      .btn.primary {
-        padding: 10px 12px;
-        border-radius: 12px;
-      }
-
-      .section-title {
-        font-size: clamp(16px, 4.6vw, 24px);
-      }
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
+    .result-row{
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      flex-wrap:wrap;
       margin-top: 14px;
     }
-
-    .bubble {
-      width: 98px;
-      height: 98px;
+    .bubble{
+      width: 98px; height: 98px;
       border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .78);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 14px 30px rgba(46, 31, 23, .08);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.78);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      box-shadow: 0 14px 30px rgba(46,31,23,.08);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      position: relative;
+      position:relative;
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-
-    .bubble::before {
-      content: "";
-      position: absolute;
-      inset: -8px;
-      border-radius: 999px;
+    .bubble::before{
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border-radius:999px;
       background: radial-gradient(circle at 50% 35%, var(--ring), transparent 60%);
-      opacity: .9;
-      pointer-events: none;
+      opacity:.9;
+      pointer-events:none;
     }
-
-    .bubble .pct {
+    .bubble .pct{
       font-weight: 950;
       font-size: 22px;
       color: var(--accent);
-      line-height: 1;
+      line-height:1;
       transition: transform .25s ease;
-      position: relative;
+      position:relative;
     }
-
-    .bubble .cap {
-      position: relative;
-      margin-top: 6px;
+    .bubble .cap{
+      position:relative;
+      margin-top:6px;
       font-size: 12px;
       color: var(--muted);
       font-weight: 900;
-      letter-spacing: .15px;
+      letter-spacing:.15px;
     }
-
-    .bubble.selected {
-      border-color: rgba(181, 140, 106, .75);
+    .bubble.selected{
+      border-color: rgba(181,140,106,.75);
       box-shadow:
-        0 18px 42px rgba(181, 140, 106, .22),
-        0 0 0 6px rgba(181, 140, 106, .14);
+        0 18px 42px rgba(181,140,106,.22),
+        0 0 0 6px rgba(181,140,106,.14);
       transform: translateY(-2px) scale(1.04);
     }
-
-    .bubble.selected .pct {
-      transform: scale(1.06);
-    }
-
-    .bubble.selected::after {
-      content: "✓";
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 28px;
-      height: 28px;
+    .bubble.selected .pct{ transform: scale(1.06); }
+    .bubble.selected::after{
+      content:"✓";
+      position:absolute;
+      top:-8px; right:-8px;
+      width: 28px; height: 28px;
       border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-weight: 950;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: rgba(181, 140, 106, .95);
-      color: #fff;
-      box-shadow: 0 14px 28px rgba(46, 31, 23, .18);
-      z-index: 2;
+      background: rgba(181,140,106,.95);
+      color:#fff;
+      box-shadow: 0 14px 28px rgba(46,31,23,.18);
+      z-index:2;
     }
 
-    .fx-layer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-      overflow: hidden;
-    }
-
-    .fx {
-      position: fixed;
-      left: 0;
-      top: 0;
-      font-size: 22px;
-      will-change: transform, opacity;
-      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .18));
-      animation: fxFloat var(--dur, 900ms) ease-out forwards;
-    }
-
-    @keyframes fxFloat {
-      0% {
-        transform: translate(var(--x, 0), var(--y, 0)) scale(.9);
-        opacity: 0;
-      }
-
-      10% {
-        opacity: 1;
-      }
-
-      100% {
-        transform: translate(calc(var(--x, 0) + var(--dx, 0px)),
-            calc(var(--y, 0) + var(--dy, -120px))) rotate(var(--rot, 12deg)) scale(var(--s, 1.25));
-        opacity: 0;
-      }
-    }
-
-    .tiny {
-      text-align: center;
-      color: rgba(107, 91, 84, .72);
+    .tiny{
+      text-align:center;
+      color: rgba(107,91,84,.72);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 12px;
       margin-top: 14px;
     }
 
-    /* ✅ Flourish SIEMPRE centrado y debajo */
-    .flourish {
-      width: min(220px, 60%);
-      margin: 0 auto;
-      opacity: .9;
-      display: block;
+    /* WhatsApp image button */
+    .whatsapp-btn-img{
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .12s ease, filter .2s ease;
+    }
+    .whatsapp-btn-img img{
+      width: 40px;
+      height: 40px;
+      display:block;
+    }
+    .whatsapp-btn-img:hover{ filter: brightness(1.03); }
+    .whatsapp-btn-img:active{ transform: scale(.95); }
+
+    /* Effects layer */
+    .fx-layer{ position:fixed; inset:0; pointer-events:none; z-index:999; overflow:hidden; }
+    .fx{
+      position:fixed; left:0; top:0;
+      font-size:22px;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.18));
+      animation: fxFloat var(--dur, 900ms) ease-out forwards;
+    }
+    @keyframes fxFloat{
+      0%{ transform: translate(var(--x,0), var(--y,0)) scale(.9); opacity:0; }
+      10%{ opacity:1; }
+      100%{
+        transform: translate(calc(var(--x,0) + var(--dx,0px)),
+                             calc(var(--y,0) + var(--dy,-120px)))
+                   rotate(var(--rot, 12deg))
+                   scale(var(--s, 1.25));
+        opacity: 0;
+      }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-
-      html {
-        scroll-behavior: auto;
-      }
+    @media (max-width: 420px){
+      .vote-card{ padding: 12px; border-radius: 18px; }
+      .vote-emoji{ font-size: 38px; }
+      .btn.primary{ padding: 10px 12px; border-radius: 12px; }
+      .section-title{ font-size: clamp(16px, 4.6vw, 24px); }
     }
 
-    .location-btn-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 12px;
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important;}
+      html{scroll-behavior:auto;}
     }
   </style>
 </head>
 
 <body>
-
   <div class="fx-layer" id="fxLayer"></div>
 
+  <!-- COVER -->
   <div class="cover" id="cover">
     <div class="cover-card">
       <h1 class="cover-title">Tienes una invitación especial</h1>
       <div class="cover-sub">Toca el botón para abrirla 💌</div>
-
       <div class="icons">✉️ 🧸 👶</div>
-
-      <div class="cover-msg" id="coverMsg">
-        Hay una noticia hermosa y queremos compartir este momento contigo.
-      </div>
+      <div class="cover-msg" id="coverMsg">Hay una noticia hermosa y queremos compartir este momento contigo.</div>
 
       <button class="arrow-btn" id="coverOpen" aria-label="Abrir invitación">
         <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
-          <path fill="currentColor" d="M8 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" fill="none" />
+          <path d="M8 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
       </button>
     </div>
   </div>
 
   <div class="container" id="app">
-    <div class="card" id="mainCard">
+    <div class="cards">
 
-      <div class="hero-band" id="invite">
-        <div class="center">
-          <h2 class="big-name" id="babyTitle">¡Revelación de Género!</h2>
+      <!-- 1) HERO CARD -->
+      <div class="card" data-reveal data-bg="a" id="cardHero">
+        <div class="hero-band" id="inviteTop">
+          <div class="center">
+            <h2 class="big-name" id="babyTitle">¡Revelación de Género!</h2>
+            <div class="names script-names" id="parentsNames">Domenica y Richard</div>
 
-          <div class="names script-names" id="parentsNames">Domenica y Richard</div>
+            <p class="subtitle" id="inviteText">
+              Como estamos felices de esperar a nuestro bebé, queremos que nos acompañes a conocer si será…
+            </p>
 
-          <p class="subtitle" id="inviteText">
-            Como estamos felices de esperar a nuestro bebé, queremos que nos acompañes a conocer si será…
-          </p>
+            <div class="heorshe-wrap">
+              <div class="heorshe">⭐ He or She ⭐</div>
+              <svg class="flourish" viewBox="0 0 240 28" aria-hidden="true">
+                <path d="M10 14c24-10 44-10 70 0s46 10 70 0 46-10 80 0" fill="none" stroke="rgba(181,140,106,.55)" stroke-width="2.4" stroke-linecap="round"/>
+                <circle cx="120" cy="14" r="4" fill="rgba(181,140,106,.55)"/>
+              </svg>
+            </div>
 
-          <!-- ✅ He or She + flourish siempre centrado y debajo -->
-          <div class="heorshe-wrap">
-            <div class="heorshe">⭐ He or She ⭐</div>
-
-            <svg class="flourish" viewBox="0 0 240 28" aria-hidden="true">
-              <path d="M10 14c24-10 44-10 70 0s46 10 70 0 46-10 80 0" fill="none" stroke="rgba(181,140,106,.55)"
-                stroke-width="2.4" stroke-linecap="round" />
-              <circle cx="120" cy="14" r="4" fill="rgba(181,140,106,.55)" />
-            </svg>
+            <p class="subtitle" id="inviteExtra" style="margin-top:12px;">
+              Ven a celebrar, reír, comer algo rico y vivir la sorpresa 🎊
+            </p>
+            <div class="tiny">Desliza hacia abajo para ver los detalles ↓</div>
           </div>
-
-          <p class="subtitle" id="inviteExtra" style="margin-top:12px;">
-            Ven a celebrar, reír, comer algo rico y vivir la sorpresa 🎊
-          </p>
-
-          <div class="tiny">Desliza hacia abajo para ver los detalles ↓</div>
         </div>
 
         <div class="photo-row" aria-hidden="true">
@@ -867,26 +701,22 @@
             <svg class="art" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
               <defs>
                 <linearGradient id="g1" x1="0" x2="1">
-                  <stop offset="0" stop-color="rgba(217,188,162,.55)" />
-                  <stop offset="1" stop-color="rgba(181,140,106,.35)" />
+                  <stop offset="0" stop-color="rgba(217,188,162,.55)"/>
+                  <stop offset="1" stop-color="rgba(181,140,106,.35)"/>
                 </linearGradient>
                 <radialGradient id="r1" cx="50%" cy="20%" r="80%">
-                  <stop offset="0" stop-color="rgba(255,255,255,.8)" />
-                  <stop offset="1" stop-color="rgba(255,255,255,0)" />
+                  <stop offset="0" stop-color="rgba(255,255,255,.8)"/>
+                  <stop offset="1" stop-color="rgba(255,255,255,0)"/>
                 </radialGradient>
               </defs>
-              <rect width="800" height="420" fill="url(#g1)" />
-              <circle cx="180" cy="120" r="120" fill="url(#r1)" />
-              <circle cx="640" cy="100" r="140" fill="url(#r1)" opacity=".8" />
-              <path d="M240 290c70-80 120-110 160-110s90 30 160 110" fill="none" stroke="rgba(59,47,42,.28)"
-                stroke-width="14" stroke-linecap="round" />
-              <path d="M330 185c-10-34 12-62 48-62s58 28 48 62" fill="none" stroke="rgba(59,47,42,.22)"
-                stroke-width="12" stroke-linecap="round" />
-              <path d="M470 185c-10-34 12-62 48-62s58 28 48 62" fill="none" stroke="rgba(59,47,42,.22)"
-                stroke-width="12" stroke-linecap="round" opacity=".9" />
-              <path d="M385 255c18 18 36 18 54 0" fill="none" stroke="rgba(59,47,42,.25)" stroke-width="10"
-                stroke-linecap="round" />
-              <circle cx="430" cy="240" r="22" fill="rgba(255,255,255,.45)" />
+              <rect width="800" height="420" fill="url(#g1)"/>
+              <circle cx="180" cy="120" r="120" fill="url(#r1)"/>
+              <circle cx="640" cy="100" r="140" fill="url(#r1)" opacity=".8"/>
+              <path d="M240 290c70-80 120-110 160-110s90 30 160 110" fill="none" stroke="rgba(59,47,42,.28)" stroke-width="14" stroke-linecap="round"/>
+              <path d="M330 185c-10-34 12-62 48-62s58 28 48 62" fill="none" stroke="rgba(59,47,42,.22)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M470 185c-10-34 12-62 48-62s58 28 48 62" fill="none" stroke="rgba(59,47,42,.22)" stroke-width="12" stroke-linecap="round" opacity=".9"/>
+              <path d="M385 255c18 18 36 18 54 0" fill="none" stroke="rgba(59,47,42,.25)" stroke-width="10" stroke-linecap="round"/>
+              <circle cx="430" cy="240" r="22" fill="rgba(255,255,255,.45)"/>
             </svg>
             <div class="caption">Un momento para celebrar en familia 🤍</div>
           </div>
@@ -895,34 +725,32 @@
             <svg class="art" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
               <defs>
                 <linearGradient id="g2" x1="0" x2="1">
-                  <stop offset="0" stop-color="rgba(181,140,106,.35)" />
-                  <stop offset="1" stop-color="rgba(217,188,162,.55)" />
+                  <stop offset="0" stop-color="rgba(181,140,106,.35)"/>
+                  <stop offset="1" stop-color="rgba(217,188,162,.55)"/>
                 </linearGradient>
                 <radialGradient id="r2" cx="50%" cy="50%" r="70%">
-                  <stop offset="0" stop-color="rgba(255,255,255,.85)" />
-                  <stop offset="1" stop-color="rgba(255,255,255,0)" />
+                  <stop offset="0" stop-color="rgba(255,255,255,.85)"/>
+                  <stop offset="1" stop-color="rgba(255,255,255,0)"/>
                 </radialGradient>
               </defs>
-              <rect width="800" height="420" fill="url(#g2)" />
-              <rect x="120" y="70" width="560" height="280" rx="26" fill="rgba(255,255,255,.38)"
-                stroke="rgba(255,255,255,.55)" stroke-width="2" />
-              <circle cx="400" cy="210" r="140" fill="rgba(255,255,255,.22)" />
-              <circle cx="400" cy="210" r="130" fill="url(#r2)" opacity=".9" />
-              <path d="M300 245c30-70 70-110 120-110s90 40 120 110c-60 55-120 72-240 0z" fill="rgba(59,47,42,.22)" />
-              <circle cx="390" cy="210" r="10" fill="rgba(255,255,255,.45)" />
-              <circle cx="440" cy="210" r="10" fill="rgba(255,255,255,.45)" />
-              <path d="M410 240c10 10 22 10 32 0" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6"
-                stroke-linecap="round" />
-              <path d="M160 310h480" stroke="rgba(255,255,255,.55)" stroke-width="2" opacity=".7" />
-              <path d="M160 100h240" stroke="rgba(255,255,255,.55)" stroke-width="2" opacity=".7" />
+              <rect width="800" height="420" fill="url(#g2)"/>
+              <rect x="120" y="70" width="560" height="280" rx="26" fill="rgba(255,255,255,.38)" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+              <circle cx="400" cy="210" r="140" fill="rgba(255,255,255,.22)"/>
+              <circle cx="400" cy="210" r="130" fill="url(#r2)" opacity=".9"/>
+              <path d="M300 245c30-70 70-110 120-110s90 40 120 110c-60 55-120 72-240 0z" fill="rgba(59,47,42,.22)"/>
+              <circle cx="390" cy="210" r="10" fill="rgba(255,255,255,.45)"/>
+              <circle cx="440" cy="210" r="10" fill="rgba(255,255,255,.45)"/>
+              <path d="M410 240c10 10 22 10 32 0" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M160 310h480" stroke="rgba(255,255,255,.55)" stroke-width="2" opacity=".7"/>
+              <path d="M160 100h240" stroke="rgba(255,255,255,.55)" stroke-width="2" opacity=".7"/>
             </svg>
             <div class="caption">La sorpresa más linda está por llegar 👶✨</div>
           </div>
         </div>
       </div>
 
-      <!-- DETAILS -->
-      <section class="section" id="details">
+      <!-- 2) DETALLES CARD -->
+      <section class="card section-pad" data-reveal data-bg="b" id="details">
         <div class="section-head">
           <div class="badge-ico">🗓️</div>
           <h2 class="section-title">Detalles</h2>
@@ -934,7 +762,6 @@
             <div class="value" id="dateLong">Viernes | 28 | Febrero</div>
             <div class="value small" id="timeText">Hora: 15:00</div>
 
-            <!-- ✅ Conteo regresivo AHORA va después de la fecha -->
             <div class="countdown-wrap">
               <div class="countdown-title">✨ Solo falta… ✨</div>
               <div class="countdown-big" id="countdown">-- : -- : -- : --</div>
@@ -945,33 +772,31 @@
           <div class="box">
             <div class="label">📍 Lugar</div>
             <div class="value" id="placeText">Tumbaco</div>
-            <div class="value small" id="addressText">
-              Dirección: Gonzalo Pizarro & C. Rumiñahui
-            </div>
+            <div class="value small" id="addressText">Dirección: Gonzalo Pizarro &amp; C. Rumiñahui</div>
 
-            <!-- ✅ Botón de ubicación dentro del bloque -->
             <div class="location-btn-wrap">
               <a class="btn primary icon" id="gmapsBtn" target="_blank" rel="noopener" aria-label="Abrir ubicación">
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
                   <path fill="currentColor"
-                    d="M12 22s7-6.1 7-12.2C19 5.5 15.9 2.5 12 2.5S5 5.5 5 9.8C5 15.9 12 22 12 22zm0-9.5a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z" />
+                    d="M12 22s7-6.1 7-12.2C19 5.5 15.9 2.5 12 2.5S5 5.5 5 9.8C5 15.9 12 22 12 22zm0-9.5a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4z"/>
                 </svg>
               </a>
             </div>
           </div>
         </div>
+      </section>
 
-        <div class="divider"></div>
-
-        <div class="section-head" style="margin-top:0;">
+      <!-- 3) CÓDIGO DE VESTIMENTA CARD -->
+      <section class="card section-pad" data-reveal data-bg="c" id="dress">
+        <div class="section-head">
           <div class="badge-ico">🤍</div>
-          <h3 class="section-title" style="margin:0;">Código de vestimenta</h3>
+          <h2 class="section-title">Código de vestimenta</h2>
         </div>
         <p class="subtitle" id="dressText">¡Vístete de neutros para ser parte de este momento especial!</p>
       </section>
 
-      <!-- GIFT -->
-      <section class="section center" id="gift">
+      <!-- 4) REGALO CARD -->
+      <section class="card section-pad" data-reveal data-bg="d" id="gift">
         <div class="section-head">
           <div class="badge-ico">🎁</div>
           <h2 class="section-title">Regalo</h2>
@@ -993,8 +818,8 @@
         </div>
       </section>
 
-      <!-- PREDICTION -->
-      <section class="section center" id="prediction">
+      <!-- 5) PREDICCIÓN + RESULTADOS CARD -->
+      <section class="card section-pad" data-reveal data-bg="b" id="prediction">
         <div class="section-head">
           <div class="badge-ico">🗳️</div>
           <h2 class="section-title">¿Cuál es tu predicción?</h2>
@@ -1037,8 +862,8 @@
         <div class="tiny" id="yourVoteHint"></div>
       </section>
 
-      <!-- RSVP -->
-      <section class="section center" id="rsvp">
+      <!-- 6) RSVP CARD -->
+      <section class="card section-pad" data-reveal data-bg="c" id="rsvp">
         <div class="section-head">
           <div class="badge-ico">💌</div>
           <h2 class="section-title">¡Será un día muy especial!</h2>
@@ -1046,9 +871,9 @@
 
         <p class="subtitle" id="rsvpText">¿Nos acompañarás? Por favor confirma tu asistencia.</p>
 
-        <div class="action-row" style="margin-top:14px;">
-          <a class="whatsapp-btn-img" id="rsvpBtn" target="_blank" rel="noopener"
-            aria-label="Confirmar por WhatsApp">
+        <div style="display:flex; justify-content:center; margin-top:14px;">
+          <a class="whatsapp-btn-img" id="rsvpBtn" target="_blank" rel="noopener" aria-label="Confirmar por WhatsApp">
+            <!-- Asegúrate de tener este archivo en la MISMA carpeta -->
             <img src="whatsapp.png" alt="WhatsApp">
           </a>
         </div>
@@ -1060,6 +885,7 @@
   </div>
 
   <script>
+    // ===== Helpers =====
     const $ = (id) => document.getElementById(id);
 
     const CONFIG = {
@@ -1069,38 +895,36 @@
       rsvpUrl: ""
     };
 
-    // ===== MENSAJE DE WHATSAPP (ANTI-ERRORES DE EMOJI) =====
+    // ===== WhatsApp link (con emojis) =====
+    // Nota: En WhatsApp Web (PC) a veces los emojis en el texto prellenado se “rompen”.
+    // En móvil funciona bien. Esto es limitación del lado de WhatsApp Web.
     const WA_PHONE = "593963837148";
-
     const WA_TEXT =
-      "¡Hola! " + String.fromCodePoint(0x1F49B) + "\n\n" +
-      "Quiero confirmar mi asistencia a su revelación de género " +
-      String.fromCodePoint(0x1F389, 0x1F476) + "\n\n" +
-      "Nos vemos el 28 de febrero a las 15:00 en Tumbaco. " +
-      String.fromCodePoint(0x1F4CD) + "\n\n" +
-      "¡Gracias por la invitación! " +
-      String.fromCodePoint(0x2728);
+      "¡Hola! 💛\n\n" +
+      "Quiero confirmar mi asistencia a su revelación de género 🎉👶\n\n" +
+      "Nos vemos el 28 de febrero a las 15:00 en Tumbaco. 📍\n\n" +
+      "¡Gracias por la invitación! ✨";
 
     CONFIG.rsvpUrl = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(WA_TEXT)}`;
 
+    // ===== Set links/text =====
     $("coverMsg").textContent = CONFIG.coverMsg;
     $("gmapsBtn").href = CONFIG.googleMapsUrl;
     $("rsvpBtn").href = CONFIG.rsvpUrl;
 
-    console.log(WA_TEXT);
-
-    function burstEmoji({ emoji, x, y, count = 12 }) {
+    // ===== FX =====
+    function burstEmoji({emoji, x, y, count=12}){
       const fxLayer = $("fxLayer");
-      for (let i = 0; i < count; i++) {
+      for(let i=0;i<count;i++){
         const s = document.createElement("span");
         s.className = "fx";
         s.textContent = emoji;
 
-        const dx = (Math.random() * 2 - 1) * 180;
-        const dy = - (70 + Math.random() * 180);
-        const rot = (Math.random() * 2 - 1) * 45;
-        const sc = 1 + Math.random() * 0.6;
-        const dur = 650 + Math.random() * 650;
+        const dx = (Math.random()*2 - 1) * 180;
+        const dy = - (70 + Math.random()*180);
+        const rot = (Math.random()*2 - 1) * 45;
+        const sc  = 1 + Math.random()*0.6;
+        const dur = 650 + Math.random()*650;
 
         s.style.setProperty("--x", x + "px");
         s.style.setProperty("--y", y + "px");
@@ -1115,46 +939,55 @@
       }
     }
 
-    const cover = $("cover");
-    const mainCard = $("mainCard");
+    // ===== Reveal on scroll =====
+    const revealEls = Array.from(document.querySelectorAll("[data-reveal]"));
+    const io = new IntersectionObserver((entries)=>{
+      for(const e of entries){
+        if(e.isIntersecting){
+          e.target.classList.add("reveal");
+          io.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.12 });
 
-    function openInvite() {
-      burstEmoji({ emoji: "✨", x: innerWidth / 2, y: 180, count: 14 });
-      burstEmoji({ emoji: "🧸", x: innerWidth / 2, y: 180, count: 8 });
-      burstEmoji({ emoji: "🤍", x: innerWidth / 2, y: 180, count: 10 });
+    revealEls.forEach(el => io.observe(el));
+
+    // ===== Cover open: empezar desde el INICIO de la página =====
+    const cover = $("cover");
+    function openInvite(){
+      burstEmoji({emoji:"✨", x: innerWidth/2, y: 180, count: 14});
+      burstEmoji({emoji:"🧸", x: innerWidth/2, y: 180, count: 8});
+      burstEmoji({emoji:"🤍", x: innerWidth/2, y: 180, count: 10});
 
       cover.classList.add("hide");
-      requestAnimationFrame(() => mainCard.classList.add("reveal"));
-      setTimeout(() => cover.remove(), 850);
 
-      document.querySelector("#invite").scrollIntoView({ behavior: "smooth", block: "start" });
+      // ✅ al abrir: ir al top real (no al título)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(()=> cover.remove(), 850);
     }
     $("coverOpen").addEventListener("click", openInvite);
 
-    function pad2(n) { return String(n).padStart(2, "0"); }
+    // ===== Countdown =====
+    function pad2(n){ return String(n).padStart(2,"0"); }
 
-    function getTargetDate() {
+    function getTargetDate(){
       const m = CONFIG.event.month - 1;
-      // ✅ usa el año fijo si existe
-      const y = CONFIG.event.year ?? new Date().getFullYear();
-      return new Date(y, m, CONFIG.event.day, CONFIG.event.hour, CONFIG.event.minute, 0);
+      return new Date(CONFIG.event.year, m, CONFIG.event.day, CONFIG.event.hour, CONFIG.event.minute, 0);
     }
 
-
-    const target = getTargetDate();
-
-    function tickCountdown() {
+    function tickCountdown(){
       const el = $("countdown");
       const sub = $("countdownSub");
-      if (!el) return;
+      if(!el) return;
 
-      const target = getTargetDate(); // ✅ aquí dentro
       const now = new Date();
+      const target = getTargetDate();
       let diff = target.getTime() - now.getTime();
 
-      if (diff <= 0) {
+      if(diff <= 0){
         el.textContent = "00 : 00 : 00 : 00";
-        if (sub) sub.textContent = "¡Hoy es el día! 🎉";
+        if(sub) sub.textContent = "¡Hoy es el día! 🎉";
         return;
       }
 
@@ -1164,51 +997,50 @@
       const mins = Math.floor((totalSeconds % 3600) / 60);
       const secs = totalSeconds % 60;
 
-      el.textContent = `${String(days).padStart(2, "0")} : ${String(hours).padStart(2, "0")} : ${String(mins).padStart(2, "0")} : ${String(secs).padStart(2, "0")}`;
-      if (sub) sub.textContent = "Días : Horas : Minutos : Segundos";
+      el.textContent = `${pad2(days)} : ${pad2(hours)} : ${pad2(mins)} : ${pad2(secs)}`;
+      if(sub) sub.textContent = "Días : Horas : Minutos : Segundos";
     }
     tickCountdown();
     setInterval(tickCountdown, 1000);
 
+    // ===== Voting (bloquea doble voto en el dispositivo) =====
     const KEY = "gender_invite_votes_v3";
     const YOU = "gender_invite_your_vote_v3";
 
-    function getVotes() {
-      try {
+    function getVotes(){
+      try{
         const raw = localStorage.getItem(KEY);
-        if (!raw) return { boy: 0, girl: 0 };
+        if(!raw) return {boy:0, girl:0};
         const v = JSON.parse(raw);
-        return { boy: Number(v.boy || 0), girl: Number(v.girl || 0) };
-      } catch (e) {
-        return { boy: 0, girl: 0 };
+        return { boy: Number(v.boy||0), girl: Number(v.girl||0) };
+      }catch(e){
+        return {boy:0, girl:0};
       }
     }
-    function setVotes(v) { localStorage.setItem(KEY, JSON.stringify(v)); }
-    function setYourVote(val) { localStorage.setItem(YOU, val); }
-    function getYourVote() { return localStorage.getItem(YOU) || ""; }
+    function setVotes(v){ localStorage.setItem(KEY, JSON.stringify(v)); }
+    function setYourVote(val){ localStorage.setItem(YOU, val); }
+    function getYourVote(){ return localStorage.getItem(YOU) || ""; }
 
-    function applySelectedBubble(me) {
-      const bBoy = $("bubbleBoy");
-      const bGirl = $("bubbleGirl");
-      bBoy.classList.toggle("selected", me === "boy");
-      bGirl.classList.toggle("selected", me === "girl");
+    function applySelectedBubble(me){
+      $("bubbleBoy").classList.toggle("selected", me === "boy");
+      $("bubbleGirl").classList.toggle("selected", me === "girl");
     }
 
-    function renderVotes() {
+    function renderVotes(){
       const v = getVotes();
       const total = v.boy + v.girl;
-      const pb = total ? Math.round((v.boy / total) * 100) : 0;
+      const pb = total ? Math.round((v.boy/total)*100) : 0;
       const pg = total ? 100 - pb : 0;
 
       $("pctBoy").textContent = pb + "%";
       $("pctGirl").textContent = pg + "%";
 
       const me = getYourVote();
-      if (me) {
+      if(me){
         $("yourVoteHint").textContent = `Tu predicción: ${me === "boy" ? "Niño 🧸🎈" : "Niña 🧸🎀"} (voto registrado)`;
         $("voteBoy").disabled = true;
         $("voteGirl").disabled = true;
-      } else {
+      }else{
         $("yourVoteHint").textContent = "Aún no has votado 🙂";
         $("voteBoy").disabled = false;
         $("voteGirl").disabled = false;
@@ -1217,38 +1049,35 @@
       applySelectedBubble(me);
     }
 
-    function softWarn(msg) {
+    function softWarn(msg){
       $("yourVoteHint").textContent = msg;
-      burstEmoji({ emoji: "🙈", x: innerWidth / 2, y: innerHeight / 2, count: 10 });
+      burstEmoji({emoji:"🙈", x: innerWidth/2, y: innerHeight/2, count: 10});
     }
 
-    function vote(which) {
+    function vote(which){
       const existing = getYourVote();
-      if (existing) {
+      if(existing){
         softWarn("Ya registraste tu voto en este dispositivo ✅");
         return;
       }
 
       const v = getVotes();
-      if (which === "boy") v.boy += 1;
-      if (which === "girl") v.girl += 1;
+      if(which === "boy") v.boy += 1;
+      if(which === "girl") v.girl += 1;
       setVotes(v);
       setYourVote(which);
 
-      const c = { x: innerWidth / 2, y: innerHeight / 2 };
-      burstEmoji({ emoji: which === "boy" ? "🧢" : "🎀", x: c.x, y: c.y, count: 14 });
-      burstEmoji({ emoji: "✨", x: c.x, y: c.y, count: 10 });
-      burstEmoji({ emoji: "🧸", x: c.x, y: c.y, count: 8 });
+      const c = {x: innerWidth/2, y: innerHeight/2};
+      burstEmoji({emoji: which==="boy" ? "🧢" : "🎀", x:c.x, y:c.y, count: 14});
+      burstEmoji({emoji: "✨", x:c.x, y:c.y, count: 10});
+      burstEmoji({emoji: "🧸", x:c.x, y:c.y, count: 8});
 
       renderVotes();
     }
 
-    $("voteBoy").addEventListener("click", () => vote("boy"));
-    $("voteGirl").addEventListener("click", () => vote("girl"));
-
+    $("voteBoy").addEventListener("click", ()=> vote("boy"));
+    $("voteGirl").addEventListener("click", ()=> vote("girl"));
     renderVotes();
   </script>
-
 </body>
-
 </html>
