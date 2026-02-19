@@ -313,16 +313,16 @@
       display:block;
     }
 
+    /* ✅ HERO FOTO CENTRADA EN PC (y responsive) */
     .photo-row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
+      display:flex;
+      justify-content:center;
       gap:12px;
       margin: 16px auto 0;
       width:min(820px, 100%);
     }
-    @media (max-width: 720px){ .photo-row{ grid-template-columns: 1fr; } }
-
     .photo-card{
+      width: min(560px, 100%);
       border:1px solid var(--line);
       border-radius: 22px;
       overflow:hidden;
@@ -335,7 +335,7 @@
       width:100%;
       height:100%;
       object-fit: cover;
-      display:block;
+      align-items: center;
     }
     .photo-card .caption{
       position:absolute;
@@ -562,6 +562,8 @@
       <section class="card section" id="inviteCard">
         <div class="center" id="invite">
           <h2 class="big-name" id="babyTitle">¡Revelación de Género!</h2>
+
+          <!-- ✅ NOMBRES ACTUALIZADOS -->
           <div class="names script-names" id="parentsNames">Joseline Andrade y Fernando García</div>
 
           <p class="subtitle" id="inviteText">
@@ -633,7 +635,6 @@
           <div class="badge-ico">📸</div>
           <h2 class="section-title">Galería</h2>
         </div>
-        <p class="subtitle">Desliza de derecha a izquierda (o viceversa) para ver las fotos ✨</p>
 
         <div class="slider" id="gallerySlider" aria-label="Galería en slider">
           <div class="slider-track" id="sliderTrack">
@@ -644,8 +645,6 @@
 
           <div class="dots" id="dots" aria-hidden="false"></div>
         </div>
-
-        <div class="tiny">Se desliza manualmente y también cambia automático cada 1.5s.</div>
       </section>
 
       <!-- 4) CÓDIGO DE VESTIMENTA -->
@@ -853,7 +852,6 @@
         startX = e.clientX;
         dx = 0;
         slider.setPointerCapture?.(e.pointerId);
-        // pausa ligera mientras interactúa
       });
 
       slider.addEventListener("pointermove", (e) => {
@@ -896,4 +894,3 @@
   </script>
 </body>
 </html>
-
